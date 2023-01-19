@@ -22,7 +22,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             ;val vm = ViewModelProvider(this).get(ViewModel::class.java)
 
-                MainScreen().Screen(vm = vm , input = vm.userInput)
+                MainScreen().Screen(vm = vm , userGuess = vm.userInput)
         }
     }
 }
