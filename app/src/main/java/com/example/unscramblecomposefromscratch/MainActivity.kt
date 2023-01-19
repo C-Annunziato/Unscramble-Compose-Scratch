@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.get
 import com.example.unscramblecomposefromscratch.ui.MainScreen
 import com.example.unscramblecomposefromscratch.ui.ViewModel
 import com.example.unscramblecomposefromscratch.ui.theme.UnscrambleComposeFromScratchTheme
@@ -19,9 +20,9 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            UnscrambleComposeFromScratchTheme {
-                MainScreen()
-            }
+            ;val vm = ViewModelProvider(this).get(ViewModel::class.java)
+
+                MainScreen().Screen(vm = vm , input = vm.userInput)
         }
     }
 }

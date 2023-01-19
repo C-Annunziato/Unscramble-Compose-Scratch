@@ -1,31 +1,39 @@
 package com.example.unscramblecomposefromscratch.ui
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.LiveData
 
 class MainScreen() {
 
     @Composable
-    fun Screen() {
+    fun Screen(modifier: Modifier = Modifier, vm: ViewModel, input: LiveData<String>) {
 
-       var text by rememberSaveable { mutableStateOf("") }
+//       var text by rememberSaveable { mutableStateOf("") }
 
-        Column() {
-            WordsAndScore()
-            ScrambledWordTextView()
-            EnterGuessTextField(onTextChange = { string -> text = string },valueEntered = text)
-            SkipAndSubmitButtons()
+        val userInput = input.observeAsState("").value
+
+        Column(modifier = modifier.fillMaxSize()) {
+//            WordsAndScore()
+//            ScrambledWordTextView()
+            EnterGuessTextField(onTextChange = { string -> vm.changeString(string)
+            },valueEntered = userInput)
+//            SkipAndSubmitButtons()
         }
     }
 
 
-    private @Composable
+    @Composable
     fun EnterGuessTextField(
         onTextChange: (String) -> Unit,
         valueEntered: String
@@ -56,3 +64,29 @@ class MainScreen() {
     }
 
 }
+
+@Preview
+@Composable
+fun Preview(){
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
