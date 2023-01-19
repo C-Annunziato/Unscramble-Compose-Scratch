@@ -12,14 +12,14 @@ import androidx.compose.runtime.setValue
 class MainScreen() {
 
     @Composable
-    fun Screen(vm: ViewModel) {
+    fun Screen() {
 
        var text by rememberSaveable { mutableStateOf("") }
 
         Column() {
             WordsAndScore()
             ScrambledWordTextView()
-            EnterGuessTextField(onTextChange = { string -> vm.functionChangeText(text) },valueEntered = text)
+            EnterGuessTextField(onTextChange = { string -> text = string },valueEntered = text)
             SkipAndSubmitButtons()
         }
     }
