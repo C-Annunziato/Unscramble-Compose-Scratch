@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,10 +21,13 @@ class MainScreen() {
 
     @Composable
     fun Screen(
-        modifier: Modifier = Modifier.padding(12.dp), vm: ViewModel, userGuess: LiveData<String>
+        modifier: Modifier = Modifier.padding(12.dp),
+        vm: ViewModel,
+        userGuess: LiveData<String>,
+        nextWord: LiveData<String>
     ) {
         val userInput = userGuess.observeAsState("").value
-        val nextWord by rememberSaveable { mutableStateOf(vm.getScrambledWord()) }
+        val nextScrambledWord = nextWord.observeAsState("").value
 
         Column(
             modifier = modifier.fillMaxSize(),
@@ -33,7 +37,7 @@ class MainScreen() {
                 modifier = modifier, numOfTriesLeft = vm.numOfTriesLeft, score = vm.score
             )
             ScrambledWordTextView(
-                scrambledWord = nextWord, modifier = modifier.padding(top = 40.dp)
+                scrambledWord = nextScrambledWord, modifier = modifier.padding(top = 40.dp)
             )
 
             EnterGuessTextField(

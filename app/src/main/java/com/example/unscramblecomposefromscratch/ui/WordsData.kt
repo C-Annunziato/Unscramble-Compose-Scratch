@@ -2,7 +2,6 @@ package com.example.unscramblecomposefromscratch.ui
 
 class WordsData {
 
-
     val wordsList: List<String> = listOf(
         "animal",
         "auto",

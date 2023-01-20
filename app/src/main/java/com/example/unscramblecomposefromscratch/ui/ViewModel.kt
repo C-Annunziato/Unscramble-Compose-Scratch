@@ -1,7 +1,13 @@
 package com.example.unscramblecomposefromscratch.ui
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.unscramblecomposefromscratch.Data.listOfWords
+import kotlin.random.Random
+
+
+const val TAG = "viewmodel"
 
 class ViewModel : androidx.lifecycle.ViewModel() {
 
@@ -18,8 +24,11 @@ class ViewModel : androidx.lifecycle.ViewModel() {
     private val _isError = MutableLiveData(false)
     val isError: LiveData<Boolean> = _isError
 
-    private val _nextScrambledWord = MutableLiveData("")
-    private val nextScrambledWord: LiveData<String> = _nextScrambledWord
+    private val _nextScrambledWord = MutableLiveData("hello")
+    val nextScrambledWord: LiveData<String> = _nextScrambledWord
+
+    private val usedWordsList: MutableList<String> = mutableListOf()
+
 
     fun updateUserInput(string: String) {
         _userInput.value = string
@@ -37,16 +46,17 @@ class ViewModel : androidx.lifecycle.ViewModel() {
         _isError.value = bool
     }
 
-    fun getScrambledWord(): String {
-// apply block is necessary since shuffle affects the original collection i.e. shuffles "in place" apply returns a new collection
-        val unscrambledWord = WordsData().wordsList?.random().toCharArray().apply { shuffle() }
-        _nextScrambledWord.value = unscrambledWord.joinToString(separator = "")
+    fun nextScrambledWord() {
+        val currentWord = listOfWords.shuffled().last()
 
+        val scrambledWord = currentWord.toCharArray().apply { shuffle() }.joinToString("")
 
-
-        return requireNotNull(nextScrambledWord.value)
+        if (scrambledWord != currentWord) {
+            _nextScrambledWord.value = scrambledWord
+        } else {
+            nextScrambledWord()
+        }
     }
-
 }
 
 
