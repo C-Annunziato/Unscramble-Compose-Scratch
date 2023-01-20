@@ -10,7 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.LiveData
@@ -26,6 +25,7 @@ class MainScreen() {
     ) {
         val userInput = userGuess.observeAsState("").value
         val nextScrambledWord = nextWord.observeAsState("").value
+
 
         Column(
             modifier = modifier.fillMaxSize(),
@@ -45,7 +45,7 @@ class MainScreen() {
             )
 
             SkipAndSubmitButtons(
-                nextWord = { vm.nextScrambledWord() },
+                nextWord = { vm.skipWord() },
                 submitGuess = { vm.checkGuess() }
             )
         }
@@ -110,7 +110,7 @@ class MainScreen() {
     fun SkipAndSubmitButtons(
         modifier: Modifier = Modifier,
         nextWord: () -> Unit,
-        submitGuess: () -> Unit
+        submitGuess: () -> Unit,
     ) {
 
         Row(
@@ -118,14 +118,14 @@ class MainScreen() {
             horizontalArrangement = Arrangement.spacedBy(20.dp)
         ) {
             Button(
-                onClick = { nextWord },
+                onClick = { nextWord() },
                 enabled = true,
                 modifier = Modifier.weight(1f).height(50.dp),
                 shape = CircleShape
 
             ) { Text("Next") }
             Button(
-                onClick = { submitGuess },
+                onClick = { submitGuess() },
                 enabled = true,
                 modifier = Modifier.weight(1f).height(50.dp),
                 shape = CircleShape
@@ -134,16 +134,8 @@ class MainScreen() {
 
             }
         }
-
-    }
-
-    @Preview
-    @Composable
-    fun Preview() {
-
     }
 }
-
 
 
 
