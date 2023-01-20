@@ -18,8 +18,8 @@ class ViewModel : androidx.lifecycle.ViewModel() {
     private val _isError = MutableLiveData(false)
     val isError: LiveData<Boolean> = _isError
 
-    private val _wordList = MutableLiveData(WordsData().wordsList)
-    private val wordList: LiveData<List<String>> = _wordList
+    private val _nextScrambledWord = MutableLiveData("")
+    private val nextScrambledWord: LiveData<String> = _nextScrambledWord
 
     fun updateUserInput(string: String) {
         _userInput.value = string
@@ -37,8 +37,14 @@ class ViewModel : androidx.lifecycle.ViewModel() {
         _isError.value = bool
     }
 
-    fun getScrambledWord(): String? {
-        return wordList.value?.let { it.random() }
+    fun getScrambledWord(): String {
+// apply block is necessary since shuffle affects the original collection i.e. shuffles "in place" apply returns a new collection
+        val unscrambledWord = WordsData().wordsList?.random().toCharArray().apply { shuffle() }
+        _nextScrambledWord.value = unscrambledWord.joinToString(separator = "")
+
+
+
+        return requireNotNull(nextScrambledWord.value)
     }
 
 }

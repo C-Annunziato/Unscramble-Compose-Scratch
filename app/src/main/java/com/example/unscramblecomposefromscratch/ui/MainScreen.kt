@@ -5,11 +5,13 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.LiveData
@@ -21,6 +23,7 @@ class MainScreen() {
         modifier: Modifier = Modifier.padding(12.dp), vm: ViewModel, userGuess: LiveData<String>
     ) {
         val userInput = userGuess.observeAsState("").value
+        val nextWord by rememberSaveable { mutableStateOf(vm.getScrambledWord()) }
 
         Column(
             modifier = modifier.fillMaxSize(),
@@ -30,8 +33,7 @@ class MainScreen() {
                 modifier = modifier, numOfTriesLeft = vm.numOfTriesLeft, score = vm.score
             )
             ScrambledWordTextView(
-                scrambledWord = requireNotNull(vm.getScrambledWord()),
-                modifier = modifier.padding(top = 40.dp)
+                scrambledWord = nextWord, modifier = modifier.padding(top = 40.dp)
             )
 
             EnterGuessTextField(
@@ -92,8 +94,7 @@ class MainScreen() {
                 style = MaterialTheme.typography.h3
             )
             Text(
-                text = "Unscramble the word",
-                fontSize = 20.sp
+                text = "Unscramble the word", fontSize = 20.sp
             )
         }
     }
