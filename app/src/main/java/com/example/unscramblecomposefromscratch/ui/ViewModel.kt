@@ -18,6 +18,9 @@ class ViewModel : androidx.lifecycle.ViewModel() {
     private val _isError = MutableLiveData(false)
     val isError: LiveData<Boolean> = _isError
 
+    private val _wordList = MutableLiveData(WordsData().wordsList)
+    private val wordList: LiveData<List<String>> = _wordList
+
     fun updateUserInput(string: String) {
         _userInput.value = string
     }
@@ -30,8 +33,28 @@ class ViewModel : androidx.lifecycle.ViewModel() {
         _score.value = int
     }
 
-    fun updateIsError(bool: Boolean){
+    fun updateIsError(bool: Boolean) {
         _isError.value = bool
     }
 
+    fun getScrambledWord(): String? {
+        return wordList.value?.let { it.random() }
+    }
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

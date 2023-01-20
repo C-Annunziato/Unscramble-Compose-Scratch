@@ -9,16 +9,16 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.LiveData
 
 class MainScreen() {
 
     @Composable
     fun Screen(
-        modifier: Modifier = Modifier.padding(12.dp),
-        vm: ViewModel,
-        userGuess: LiveData<String>
+        modifier: Modifier = Modifier.padding(12.dp), vm: ViewModel, userGuess: LiveData<String>
     ) {
         val userInput = userGuess.observeAsState("").value
 
@@ -26,19 +26,18 @@ class MainScreen() {
             modifier = modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-//            WordsAndScore()
-//            ScrambledWordTextView()
             WordsAndScore(
-                modifier = modifier,
-                numOfTriesLeft = vm.numOfTriesLeft,
-                score = vm.score
+                modifier = modifier, numOfTriesLeft = vm.numOfTriesLeft, score = vm.score
             )
+            ScrambledWordTextView(
+                scrambledWord = requireNotNull(vm.getScrambledWord()),
+                modifier = modifier.padding(top = 40.dp)
+            )
+
             EnterGuessTextField(
                 onTextChange = { string ->
                     vm.updateUserInput(string)
-                },
-                valueEntered = userInput,
-                isError = requireNotNull(vm.isError.value)
+                }, valueEntered = userInput, isError = requireNotNull(vm.isError.value)
             )
         }
     }
@@ -55,6 +54,9 @@ class MainScreen() {
             value = valueEntered,
             onValueChange = onTextChange,
             isError = isError,
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(20.dp),
             label = { if (isError) Text(text = "wrong guess") else Text(text = "enter your guess") },
             singleLine = true
         )
@@ -62,9 +64,7 @@ class MainScreen() {
 
     @Composable
     fun WordsAndScore(
-        modifier: Modifier = Modifier,
-        numOfTriesLeft: LiveData<Int>,
-        score: LiveData<Int>
+        modifier: Modifier = Modifier, numOfTriesLeft: LiveData<Int>, score: LiveData<Int>
     ) {
 
         Row(
@@ -76,18 +76,29 @@ class MainScreen() {
                 modifier = Modifier.weight(1f)
             )
             Text(
-                text = "Score: ${score.value}",
-                style = MaterialTheme.typography.subtitle1
+                text = "Score: ${score.value}", style = MaterialTheme.typography.subtitle1
             )
         }
     }
 
-    private @Composable
-    fun ScrambledWordTextView() {
-
+    @Composable
+    fun ScrambledWordTextView(modifier: Modifier = Modifier, scrambledWord: String) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally, modifier = modifier
+        ) {
+            Text(
+                text = scrambledWord,
+                modifier = Modifier.padding(bottom = 20.dp),
+                style = MaterialTheme.typography.h3
+            )
+            Text(
+                text = "Unscramble the word",
+                fontSize = 20.sp
+            )
+        }
     }
 
-    private @Composable
+    @Composable
     fun SkipAndSubmitButtons() {
         TODO("Not yet implemented")
     }
