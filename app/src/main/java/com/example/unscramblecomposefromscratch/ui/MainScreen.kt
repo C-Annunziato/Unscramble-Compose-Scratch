@@ -1,16 +1,13 @@
 package com.example.unscramblecomposefromscratch.ui
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
@@ -25,17 +22,24 @@ class MainScreen() {
     ) {
         val userInput = userGuess.observeAsState("").value
 
-        Column(modifier = modifier.fillMaxSize()) {
+        Column(
+            modifier = modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
 //            WordsAndScore()
 //            ScrambledWordTextView()
-            SkipAndSubmitButtons(
+            WordsAndScore(
                 modifier = modifier,
                 numOfTriesLeft = vm.numOfTriesLeft,
                 score = vm.score
             )
-            EnterGuessTextField(onTextChange = { string ->
-                vm.updateUserInput(string)
-            }, valueEntered = userInput)
+            EnterGuessTextField(
+                onTextChange = { string ->
+                    vm.updateUserInput(string)
+                },
+                valueEntered = userInput,
+                isError = requireNotNull(vm.isError.value)
+            )
         }
     }
 
@@ -44,29 +48,33 @@ class MainScreen() {
     fun EnterGuessTextField(
         onTextChange: (String) -> Unit,
         valueEntered: String,
+        modifier: Modifier = Modifier,
+        isError: Boolean
     ) {
         OutlinedTextField(
             value = valueEntered,
             onValueChange = onTextChange,
-            isError = false,
-            label = { Text(text = "input") },
+            isError = isError,
+            label = { if (isError) Text(text = "wrong guess") else Text(text = "enter your guess") },
             singleLine = true
         )
     }
 
     @Composable
-    fun SkipAndSubmitButtons(
+    fun WordsAndScore(
         modifier: Modifier = Modifier,
         numOfTriesLeft: LiveData<Int>,
         score: LiveData<Int>
     ) {
 
-        Row(modifier = modifier) {
+        Row(
+            modifier = modifier
+        ) {
             Text(
                 text = "${numOfTriesLeft.value} of 10 words",
                 style = MaterialTheme.typography.subtitle1,
-
-                )
+                modifier = Modifier.weight(1f)
+            )
             Text(
                 text = "Score: ${score.value}",
                 style = MaterialTheme.typography.subtitle1
@@ -80,7 +88,7 @@ class MainScreen() {
     }
 
     private @Composable
-    fun WordsAndScore() {
+    fun SkipAndSubmitButtons() {
         TODO("Not yet implemented")
     }
 
