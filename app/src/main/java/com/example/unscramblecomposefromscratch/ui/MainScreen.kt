@@ -1,15 +1,13 @@
 package com.example.unscramblecomposefromscratch.ui
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -44,6 +42,11 @@ class MainScreen() {
                 onTextChange = { string ->
                     vm.updateUserInput(string)
                 }, valueEntered = userInput, isError = requireNotNull(vm.isError.value)
+            )
+
+            SkipAndSubmitButtons(
+                nextWord = { vm.nextScrambledWord() },
+                submitGuess = { vm.checkGuess() }
             )
         }
     }
@@ -104,16 +107,41 @@ class MainScreen() {
     }
 
     @Composable
-    fun SkipAndSubmitButtons() {
-        TODO("Not yet implemented")
+    fun SkipAndSubmitButtons(
+        modifier: Modifier = Modifier,
+        nextWord: () -> Unit,
+        submitGuess: () -> Unit
+    ) {
+
+        Row(
+            modifier = modifier.padding(12.dp),
+            horizontalArrangement = Arrangement.spacedBy(20.dp)
+        ) {
+            Button(
+                onClick = { nextWord },
+                enabled = true,
+                modifier = Modifier.weight(1f).height(50.dp),
+                shape = CircleShape
+
+            ) { Text("Next") }
+            Button(
+                onClick = { submitGuess },
+                enabled = true,
+                modifier = Modifier.weight(1f).height(50.dp),
+                shape = CircleShape
+            ) {
+                Text("Submit")
+
+            }
+        }
+
     }
 
-}
+    @Preview
+    @Composable
+    fun Preview() {
 
-@Preview
-@Composable
-fun Preview() {
-
+    }
 }
 
 

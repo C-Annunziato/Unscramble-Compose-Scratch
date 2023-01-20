@@ -24,7 +24,7 @@ class ViewModel : androidx.lifecycle.ViewModel() {
     private val _isError = MutableLiveData(false)
     val isError: LiveData<Boolean> = _isError
 
-    private val _nextScrambledWord = MutableLiveData("hello")
+    private val _nextScrambledWord = MutableLiveData("")
     val nextScrambledWord: LiveData<String> = _nextScrambledWord
 
     private val usedWordsList: MutableList<String> = mutableListOf()
@@ -46,12 +46,24 @@ class ViewModel : androidx.lifecycle.ViewModel() {
         _isError.value = bool
     }
 
-    fun nextScrambledWord() {
-        val currentWord = listOfWords.shuffled().last()
+    fun resetGame(){
+        usedWordsList.clear()
+        _numOfTriesLeft.value = 10
+        _score.value = 0
+    }
 
+    fun checkGuess(){
+
+
+    }
+
+    fun nextScrambledWord() {
+
+        val currentWord = listOfWords.shuffled().first()
         val scrambledWord = currentWord.toCharArray().apply { shuffle() }.joinToString("")
 
-        if (scrambledWord != currentWord) {
+        // make sure the word is scrambled and its not a repeat of prior words
+        if (scrambledWord != currentWord && !usedWordsList.contains(currentWord)) {
             _nextScrambledWord.value = scrambledWord
         } else {
             nextScrambledWord()
