@@ -174,7 +174,6 @@ val listOfWords: List<String> = listOf(
     "xylophone",
     "yoga",
     "yogurt",
-    "yoyo",
     "you",
     "year",
     "yummy",

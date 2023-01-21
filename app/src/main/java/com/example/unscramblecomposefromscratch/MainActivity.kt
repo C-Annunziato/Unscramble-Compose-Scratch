@@ -37,7 +37,10 @@ class MainActivity : ComponentActivity() {
                     userGuess = vm.userInput,
                     nextWord = vm.nextScrambledWord
                 )
-                true -> score?.let { MainScreen().EndScreen(score = it, playAgain = { vm.showFinalScreen() }) }
+                true -> score?.let { MainScreen().EndScreen(
+                    score = it,
+                    vm = vm
+                ) }
             }
         }
     }

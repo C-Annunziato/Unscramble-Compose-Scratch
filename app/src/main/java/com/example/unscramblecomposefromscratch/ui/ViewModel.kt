@@ -52,18 +52,21 @@ class ViewModel : androidx.lifecycle.ViewModel() {
 
 
     fun checkGuess() {
-//        Log.i(TAG, "${userInput.value} userinput.val")
-//        Log.i(TAG, "${currentWord} current word")
+        Log.i(TAG, "${userInput.value} userinput.val")
+        Log.i(TAG, "check guess called")
         if (userInput.value.equals(currentWord, true)) {
-//            Log.i(TAG, "check guess inside equivalency")
+            Log.i(TAG, "check guess inside equivalency")
             updateScore(SCORE_INCREASE)
             updateNumOfTriesLeft()
             nextScrambledWord()
             _userInput.value = ""
         } else {
             updateIsError(true)
-            updateNumOfTriesLeft()
-            _userInput.value = ""
+            if(userInput.value != null && userInput.value != "") {
+                Log.i(TAG, "here ris the user input ${userInput.value}")
+                updateNumOfTriesLeft()
+                _userInput.value = ""
+            }
         }
     }
 
@@ -97,22 +100,15 @@ class ViewModel : androidx.lifecycle.ViewModel() {
         }
     }
 
-    private fun resetGame() {
-        Log.i(TAG, "${numOfTriesLeft.value} tries left")
-        if (numOfTriesLeft.value!! == 0) {
+    fun resetGame() {
+        Log.i(TAG, "${numOfTriesLeft.value} reset game called")
             usedWordsList.clear()
             _numOfTriesLeft.value = 10
             _score.value = 0
             _gameOver.value = false
-        }
 
     }
 
-    fun showFinalScreen() {
-        if (gameOver.value == true) {
-            resetGame()
-        }
-    }
 
 }
 

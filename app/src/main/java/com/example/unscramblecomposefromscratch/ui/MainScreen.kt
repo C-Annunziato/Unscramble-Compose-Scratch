@@ -1,5 +1,6 @@
 package com.example.unscramblecomposefromscratch.ui
 
+import android.app.Activity
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
@@ -7,12 +8,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.LiveData
 
 class MainScreen() {
+
 
     @Composable
     fun Screen(
@@ -42,7 +45,10 @@ class MainScreen() {
                 }, valueEntered = userInput, isError = requireNotNull(vm.isError.value)
             )
 
-            SkipAndSubmitButtons(nextWord = { vm.skipWord() }, submitGuess = { vm.checkGuess() })
+            SkipAndSubmitButtons(
+                nextWord = { vm.skipWord() },
+                submitGuess = { if (vm.userInput.value != null) vm.checkGuess() else {} }
+            )
         }
     }
 
@@ -75,7 +81,7 @@ class MainScreen() {
             modifier = modifier
         ) {
             Text(
-                text = "${numOfTriesLeft.value} of 10 words",
+                text = "${if(numOfTriesLeft.value!! >= 0) numOfTriesLeft.value else 0} of 10 words",
                 style = MaterialTheme.typography.subtitle1,
                 modifier = Modifier.weight(1f)
             )
@@ -135,20 +141,22 @@ class MainScreen() {
     }
 
     @Composable
-    fun EndScreen(score: Int, playAgain: () -> Unit) {
+    fun EndScreen(score: Int, vm: ViewModel) {
+
+        val activity = LocalContext.current as Activity
 
         AlertDialog(
             onDismissRequest = {
                 //disabled
             },
             confirmButton = {
-                Button(onClick = { }) {
+                Button(onClick = { vm.resetGame() }) {
                     Text("Play Again")
                 }
             },
             dismissButton = {
-                Button(onClick = {  }) {
-                    Text("Cancel")
+                Button(onClick = { activity.finish() }) {
+                    Text("Exit Application")
                 }
             },
             title = { Text("Game Complete!") },
