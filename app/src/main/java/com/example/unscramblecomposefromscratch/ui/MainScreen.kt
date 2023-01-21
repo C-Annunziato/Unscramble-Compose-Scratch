@@ -16,7 +16,6 @@ import androidx.lifecycle.LiveData
 
 class MainScreen() {
 
-
     @Composable
     fun Screen(
         modifier: Modifier = Modifier.padding(12.dp),
@@ -26,8 +25,6 @@ class MainScreen() {
     ) {
         val userInput = userGuess.observeAsState("").value
         val nextScrambledWord = nextWord.observeAsState("").value
-
-
         Column(
             modifier = modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -38,17 +35,15 @@ class MainScreen() {
             ScrambledWordTextView(
                 scrambledWord = nextScrambledWord, modifier = modifier.padding(top = 40.dp)
             )
-
             EnterGuessTextField(
                 onTextChange = { string ->
                     vm.updateUserInput(string)
                 }, valueEntered = userInput, isError = requireNotNull(vm.isError.value)
             )
-
-            SkipAndSubmitButtons(
-                nextWord = { vm.skipWord() },
-                submitGuess = { if (vm.userInput.value != null) vm.checkGuess() else {} }
-            )
+            SkipAndSubmitButtons(nextWord = { vm.skipWord() }, submitGuess = {
+                if (vm.userInput.value != null) vm.checkGuess() else {
+                }
+            })
         }
     }
 
@@ -76,12 +71,11 @@ class MainScreen() {
     fun WordsAndScore(
         modifier: Modifier = Modifier, numOfTriesLeft: LiveData<Int>, score: LiveData<Int>
     ) {
-
         Row(
             modifier = modifier
         ) {
             Text(
-                text = "${if(numOfTriesLeft.value!! >= 0) numOfTriesLeft.value else 0} of 10 words",
+                text = "${if (numOfTriesLeft.value!! >= 0) numOfTriesLeft.value else 0} of 10 words",
                 style = MaterialTheme.typography.subtitle1,
                 modifier = Modifier.weight(1f)
             )
@@ -113,7 +107,6 @@ class MainScreen() {
         nextWord: () -> Unit,
         submitGuess: () -> Unit,
     ) {
-
         Row(
             modifier = modifier.padding(12.dp), horizontalArrangement = Arrangement.spacedBy(20.dp)
         ) {
@@ -124,7 +117,6 @@ class MainScreen() {
                     .weight(1f)
                     .height(50.dp),
                 shape = CircleShape
-
             ) { Text("Next") }
             Button(
                 onClick = { submitGuess() },
@@ -135,16 +127,13 @@ class MainScreen() {
                 shape = CircleShape
             ) {
                 Text("Submit")
-
             }
         }
     }
 
     @Composable
     fun EndScreen(score: Int, vm: ViewModel) {
-
         val activity = LocalContext.current as Activity
-
         AlertDialog(
             onDismissRequest = {
                 //disabled
@@ -160,13 +149,14 @@ class MainScreen() {
                 }
             },
             title = { Text("Game Complete!") },
-            text = { Text(
-                text = "Your Score is $score",
-                style = MaterialTheme.typography.subtitle1,
-                fontWeight = FontWeight.Bold
-            ) },
-
-            )
+            text = {
+                Text(
+                    text = "Your Score is $score",
+                    style = MaterialTheme.typography.subtitle1,
+                    fontWeight = FontWeight.Bold
+                )
+            },
+        )
     }
 }
 

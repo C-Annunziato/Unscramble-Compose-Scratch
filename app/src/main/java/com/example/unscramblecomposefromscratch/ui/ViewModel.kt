@@ -12,7 +12,6 @@ const val TAG = "viewmodel"
 
 class ViewModel : androidx.lifecycle.ViewModel() {
 
-
     private val _userInput = MutableLiveData<String>()
     val userInput: LiveData<String> = _userInput
 
@@ -52,18 +51,14 @@ class ViewModel : androidx.lifecycle.ViewModel() {
 
 
     fun checkGuess() {
-        Log.i(TAG, "${userInput.value} userinput.val")
-        Log.i(TAG, "check guess called")
         if (userInput.value.equals(currentWord, true)) {
-            Log.i(TAG, "check guess inside equivalency")
             updateScore(SCORE_INCREASE)
             updateNumOfTriesLeft()
             nextScrambledWord()
             _userInput.value = ""
         } else {
             updateIsError(true)
-            if(userInput.value != null && userInput.value != "") {
-                Log.i(TAG, "here ris the user input ${userInput.value}")
+            if (userInput.value != null && userInput.value != "") {
                 updateNumOfTriesLeft()
                 _userInput.value = ""
             }
@@ -74,8 +69,6 @@ class ViewModel : androidx.lifecycle.ViewModel() {
         nextScrambledWord()
         updateNumOfTriesLeft()
         _userInput.value = ""
-//        Log.i(TAG, "${numOfTriesLeft.value} tries left")
-//        Log.i(TAG, "${usedWordsList.size} {$usedWordsList}")
     }
 
 
@@ -91,25 +84,19 @@ class ViewModel : androidx.lifecycle.ViewModel() {
             } else {
                 nextScrambledWord()
                 updateNumOfTriesLeft()
-
             }
         } else {
             _gameOver.value = true
-            Log.i(TAG, "${_gameOver.value} game over value")
-//            resetGame()
         }
     }
 
     fun resetGame() {
         Log.i(TAG, "${numOfTriesLeft.value} reset game called")
-            usedWordsList.clear()
-            _numOfTriesLeft.value = 10
-            _score.value = 0
-            _gameOver.value = false
-
+        usedWordsList.clear()
+        _numOfTriesLeft.value = 10
+        _score.value = 0
+        _gameOver.value = false
     }
-
-
 }
 
 
