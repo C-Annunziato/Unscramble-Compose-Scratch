@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import com.example.unscramblecomposefromscratch.Data.MAX_NUM_OF_WORDS
 import com.example.unscramblecomposefromscratch.Data.SCORE_INCREASE
 import com.example.unscramblecomposefromscratch.Data.listOfWords
-import kotlin.random.Random
 
 
 const val TAG = "viewmodel"
@@ -33,7 +32,7 @@ class ViewModel : androidx.lifecycle.ViewModel() {
     val nextScrambledWord: LiveData<String> = _nextScrambledWord
 
     private val usedWordsList: MutableList<String> = mutableListOf()
-
+    private lateinit var currentWord: String
 
     fun updateUserInput(string: String) {
         _userInput.value = string
@@ -51,14 +50,12 @@ class ViewModel : androidx.lifecycle.ViewModel() {
         _isError.value = bool
     }
 
-    private lateinit var currentWord: String
-
 
     fun checkGuess() {
-        Log.i(TAG,"${userInput.value} userinput.val")
-        Log.i(TAG,"${currentWord} current word")
+//        Log.i(TAG, "${userInput.value} userinput.val")
+//        Log.i(TAG, "${currentWord} current word")
         if (userInput.value.equals(currentWord, true)) {
-            Log.i(TAG,"check guess inside equivalency")
+//            Log.i(TAG, "check guess inside equivalency")
             updateScore(SCORE_INCREASE)
             updateNumOfTriesLeft()
             nextScrambledWord()
@@ -70,42 +67,55 @@ class ViewModel : androidx.lifecycle.ViewModel() {
         }
     }
 
-    fun skipWord(){
+    fun skipWord() {
         nextScrambledWord()
         updateNumOfTriesLeft()
         _userInput.value = ""
+//        Log.i(TAG, "${numOfTriesLeft.value} tries left")
+//        Log.i(TAG, "${usedWordsList.size} {$usedWordsList}")
     }
 
 
-
     fun nextScrambledWord() {
-
         currentWord = listOfWords.shuffled().first()
         val scrambledWord = currentWord.toCharArray().apply { shuffle() }.joinToString("")
-
-
-
+        if (numOfTriesLeft.value!! > 0) {
             // make sure the word is scrambled and its not a repeat of prior words
             if (scrambledWord != currentWord && !usedWordsList.contains(currentWord)) {
+                usedWordsList.add(currentWord)
                 _nextScrambledWord.value = scrambledWord
                 updateIsError(false)
             } else {
                 nextScrambledWord()
                 updateNumOfTriesLeft()
+
             }
-
-
+        } else {
+            _gameOver.value = true
+            Log.i(TAG, "${_gameOver.value} game over value")
+//            resetGame()
+        }
     }
 
-    fun resetGame() {
-        if (numOfTriesLeft.value == 0) {
+    private fun resetGame() {
+        Log.i(TAG, "${numOfTriesLeft.value} tries left")
+        if (numOfTriesLeft.value!! == 0) {
             usedWordsList.clear()
             _numOfTriesLeft.value = 10
             _score.value = 0
-            _gameOver.value = true
+            _gameOver.value = false
+        }
+
+    }
+
+    fun showFinalScreen() {
+        if (gameOver.value == true) {
+            resetGame()
         }
     }
+
 }
+
 
 
 

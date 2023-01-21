@@ -2,14 +2,12 @@ package com.example.unscramblecomposefromscratch.ui
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.LiveData
@@ -44,10 +42,7 @@ class MainScreen() {
                 }, valueEntered = userInput, isError = requireNotNull(vm.isError.value)
             )
 
-            SkipAndSubmitButtons(
-                nextWord = { vm.skipWord() },
-                submitGuess = { vm.checkGuess() }
-            )
+            SkipAndSubmitButtons(nextWord = { vm.skipWord() }, submitGuess = { vm.checkGuess() })
         }
     }
 
@@ -114,20 +109,23 @@ class MainScreen() {
     ) {
 
         Row(
-            modifier = modifier.padding(12.dp),
-            horizontalArrangement = Arrangement.spacedBy(20.dp)
+            modifier = modifier.padding(12.dp), horizontalArrangement = Arrangement.spacedBy(20.dp)
         ) {
             Button(
                 onClick = { nextWord() },
                 enabled = true,
-                modifier = Modifier.weight(1f).height(50.dp),
+                modifier = Modifier
+                    .weight(1f)
+                    .height(50.dp),
                 shape = CircleShape
 
             ) { Text("Next") }
             Button(
                 onClick = { submitGuess() },
                 enabled = true,
-                modifier = Modifier.weight(1f).height(50.dp),
+                modifier = Modifier
+                    .weight(1f)
+                    .height(50.dp),
                 shape = CircleShape
             ) {
                 Text("Submit")
@@ -135,7 +133,35 @@ class MainScreen() {
             }
         }
     }
+
+    @Composable
+    fun EndScreen(score: Int, playAgain: () -> Unit) {
+
+        AlertDialog(
+            onDismissRequest = {
+                //disabled
+            },
+            confirmButton = {
+                Button(onClick = { }) {
+                    Text("Play Again")
+                }
+            },
+            dismissButton = {
+                Button(onClick = {  }) {
+                    Text("Cancel")
+                }
+            },
+            title = { Text("Game Complete!") },
+            text = { Text(
+                text = "Your Score is $score",
+                style = MaterialTheme.typography.subtitle1,
+                fontWeight = FontWeight.Bold
+            ) },
+
+            )
+    }
 }
+
 
 
 

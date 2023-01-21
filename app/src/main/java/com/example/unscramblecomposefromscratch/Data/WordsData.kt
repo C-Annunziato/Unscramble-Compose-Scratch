@@ -1,7 +1,7 @@
 package com.example.unscramblecomposefromscratch.Data
 
 const val MAX_NUM_OF_WORDS = 10
-const val SCORE_INCREASE = 10
+const val SCORE_INCREASE = 100
 
 val listOfWords: List<String> = listOf(
     "animal",
