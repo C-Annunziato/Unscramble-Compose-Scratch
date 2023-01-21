@@ -26,6 +26,9 @@ class ViewModel : androidx.lifecycle.ViewModel() {
     private val _isError = MutableLiveData(false)
     val isError: LiveData<Boolean> = _isError
 
+    private val _gameOver = MutableLiveData(false)
+    val gameOver: LiveData<Boolean> = _gameOver
+
     private val _nextScrambledWord = MutableLiveData("")
     val nextScrambledWord: LiveData<String> = _nextScrambledWord
 
@@ -52,37 +55,46 @@ class ViewModel : androidx.lifecycle.ViewModel() {
 
 
     fun checkGuess() {
-        Log.i(TAG,"check guess called")
-        Log.i(TAG,"${userInput.value}")
-        Log.i(TAG,"${currentWord}")
+        Log.i(TAG,"${userInput.value} userinput.val")
+        Log.i(TAG,"${currentWord} current word")
         if (userInput.value.equals(currentWord, true)) {
+            Log.i(TAG,"check guess inside equivalency")
             updateScore(SCORE_INCREASE)
             updateNumOfTriesLeft()
             nextScrambledWord()
+            _userInput.value = ""
         } else {
             updateIsError(true)
             updateNumOfTriesLeft()
+            _userInput.value = ""
         }
     }
 
     fun skipWord(){
-        Log.i(TAG,"skip word called")
         nextScrambledWord()
         updateNumOfTriesLeft()
+        _userInput.value = ""
     }
+
+
 
     fun nextScrambledWord() {
 
-        Log.i(TAG,"next scrambled word called")
         currentWord = listOfWords.shuffled().first()
         val scrambledWord = currentWord.toCharArray().apply { shuffle() }.joinToString("")
 
-        // make sure the word is scrambled and its not a repeat of prior words
-        if (scrambledWord != currentWord && !usedWordsList.contains(currentWord)) {
-            _nextScrambledWord.value = scrambledWord
-        } else {
-            nextScrambledWord()
-        }
+
+
+            // make sure the word is scrambled and its not a repeat of prior words
+            if (scrambledWord != currentWord && !usedWordsList.contains(currentWord)) {
+                _nextScrambledWord.value = scrambledWord
+                updateIsError(false)
+            } else {
+                nextScrambledWord()
+                updateNumOfTriesLeft()
+            }
+
+
     }
 
     fun resetGame() {
@@ -90,6 +102,7 @@ class ViewModel : androidx.lifecycle.ViewModel() {
             usedWordsList.clear()
             _numOfTriesLeft.value = 10
             _score.value = 0
+            _gameOver.value = true
         }
     }
 }
